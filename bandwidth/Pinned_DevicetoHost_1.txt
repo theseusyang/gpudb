@@ -1,0 +1,181 @@
+
+Device: TITAN X (Pascal)
+Transfer size (B): 0
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.000000
+n
+Device: TITAN X (Pascal)
+Transfer size (B): 4
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.000341
+n
+Device: TITAN X (Pascal)
+Transfer size (B): 8
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.000651
+n
+Device: TITAN X (Pascal)
+Transfer size (B): 16
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.001323
+n
+Device: TITAN X (Pascal)
+Transfer size (B): 32
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.002703
+n
+Device: TITAN X (Pascal)
+Transfer size (B): 64
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.005479
+n
+Device: TITAN X (Pascal)
+Transfer size (B): 128
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.010127
+n
+Device: TITAN X (Pascal)
+Transfer size (B): 256
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.019560
+n
+Device: TITAN X (Pascal)
+Transfer size (B): 512
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.041237
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 1
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.086721
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 2
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.172973
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 4
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.334204
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 8
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.654731
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 16
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 1.273632
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 32
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 1.759450
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 64
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 3.953668
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 128
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 5.970846
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 256
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 8.325203
+n
+Device: TITAN X (Pascal)
+Transfer size (KB): 512
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 10.208100
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 1
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 11.513703
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 2
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.127313
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 4
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.632228
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 8
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.937078
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 16
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 13.048807
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 32
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 13.129027
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 64
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 13.164217
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 128
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 13.188060
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 256
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 13.197376
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 512
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 13.202744
+n
+Device: TITAN X (Pascal)
+Transfer size (MB): 1024
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 13.184572
+n

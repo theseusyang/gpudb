@@ -1,0 +1,181 @@
+
+Device: GeForce GTX 1080
+Transfer size (B): 0
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.000000
+n
+Device: GeForce GTX 1080
+Transfer size (B): 4
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.000626
+n
+Device: GeForce GTX 1080
+Transfer size (B): 8
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.001251
+n
+Device: GeForce GTX 1080
+Transfer size (B): 16
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.002590
+n
+Device: GeForce GTX 1080
+Transfer size (B): 32
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.005158
+n
+Device: GeForce GTX 1080
+Transfer size (B): 64
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.010391
+n
+Device: GeForce GTX 1080
+Transfer size (B): 128
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.020702
+n
+Device: GeForce GTX 1080
+Transfer size (B): 256
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.040812
+n
+Device: GeForce GTX 1080
+Transfer size (B): 512
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.081616
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 1
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.165700
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 2
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.320224
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 4
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 0.635741
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 8
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 1.227935
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 16
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 2.264685
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 32
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 3.845865
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 64
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 5.591351
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 128
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 8.190688
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 256
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 10.066851
+n
+Device: GeForce GTX 1080
+Transfer size (KB): 512
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 11.680162
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 1
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.208462
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 2
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.321068
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 4
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.748435
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 8
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.685642
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 16
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.829996
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 32
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.874694
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 64
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.744598
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 128
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.775382
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 256
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.949319
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 512
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.959914
+n
+Device: GeForce GTX 1080
+Transfer size (MB): 1024
+
+Pinned transfers
+  Device to Host bandwidth (GB/s): 12.917245
+n
