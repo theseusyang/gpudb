@@ -1074,8 +1074,8 @@ void profilebitweavscan(int        *h_a,
             }
       		for(int k  = 0; k < n; k += early_size){
 
-      			if(early_bit_cpu[k] == 1) continue;
-            	checkCuda( cudaMemcpy(d + j * (n / 32) + k, h_a + j * (n / 32) + k, early_size / 32 *4, cudaMemcpyHostToDevice) );
+      		    if(early_bit_cpu[k] == 1) continue;
+            	    checkCuda( cudaMemcpy(d + j * (n / 32) + k, h_a + j * (n / 32) + k, early_size / 32 *4, cudaMemcpyHostToDevice) );
 	            genScanFilter_int_lth_bit<<<grid,block>>>(d + j * (n / 32) + k, early_size / 32,  constC, lt, eq);
 
 	            checkCuda(cudaThreadSynchronize());

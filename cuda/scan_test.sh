@@ -1,10 +1,10 @@
 #!/bin/bash
 
-powa=1
-for((i=1;i<=27;i++))
+powa=32
+for((i=5;i<=25;i++))
 do 
 
-./a.out $powa ``
+./a.out 268435456 268435456 $powa ``
 
 powa=`expr $powa \* 2`
 

@@ -966,7 +966,13 @@ cudaError_t checkCuda(cudaError_t result)
 #endif
   return result;
 }
+inline int bit_constC(int where,int j){
 
+        int constC = (((1U << (31 - j )) & where)>>(31 - j));
+        if(constC != 0) 
+          constC = (1U << 31) - 1;
+        return constC;
+}
 
 void profilebitscan(int        *h_a, 
                    int        *h_b, 
@@ -997,11 +1003,9 @@ void profilebitscan(int        *h_a,
       equal<<<grid,block>>>(eq, n/32, c) ;
       // printf("%d\n",    clock());
       for(int j = 0; j < 32; ++j){
-            int constC = 0;
-            for(int k = 0;k < 32;++k) {
-            	constC += ((((1U << (31 - j )) & where)>>(31-j))<< k);
+            int constC =bit_constC(where,j);
                // printf("%u %u\n",j,((((1U << (31 - j )) & where)>>(31-j))<< k));
-            }
+            
             genScanFilter_int_lth_bit<<<grid,block>>>(d + j * (n / 32), n / 32,  constC, lt, eq);
             checkCuda(cudaThreadSynchronize());
       }
@@ -1048,7 +1052,7 @@ int main(int argc, char ** argv)
   checkCuda( cudaMalloc((void**)&lt, bytes ) ); // device return
   checkCuda( cudaMalloc((void**)&eq, bytes  ) );  
   srand(time(0));
-  for (int i = 0; i < nElements; ++i) h_aPageable[i] = i;     
+  for (int i = 0; i < nElements; ++i) h_aPageable[i] = rand()%(1U<<31);     
   // for (int i = 0; i < nElements; ++i) 
   //   for(int j = 31; j >= 0; --j){
   //       h_bitPageable[i / 32 + (31-j)*(nElements/32)] += (((h_aPageable[i] &(1<<j))>>j)<<(31 - i % 32));
@@ -1075,7 +1079,7 @@ int main(int argc, char ** argv)
   // }
 
 
-  int constC = nElements/2-1;
+  int constC = rand()%(1U<<31);
   // time_t a=clock();
   // for (int i = 0; i < nElements; ++i) if(h_aPageable[i] < constC)
   //       h_bPageable[i] = 1;
