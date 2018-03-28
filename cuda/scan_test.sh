@@ -1,13 +1,11 @@
 #!/bin/bash
 
-powa=32
-for((i=5;i<=25;i++))
+powa=128
+for((i=7;i<=28;i++))
 do 
-
-./a.out 268435456 268435456 $powa ``
+taskset -c 63 ./smallstore  67108864   67108864 $powa   ``
 
 powa=`expr $powa \* 2`
 
 done
-
 

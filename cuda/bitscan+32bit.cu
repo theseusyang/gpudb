@@ -26,15 +26,11 @@
 #include "scanImpl.cu"
 #include "../include/common.h"
 #include "../include/gpuCudaLib.h"
-#include <iostream>
-using namespace std;
-#define TEST  1
 
-#define utype  unsigned long long
-#define type long long
-#define type_len (sizeof(type) * 8)
-double ave_time ;
-__global__ void static equal(type * a, int n, utype constC){
+//#define TEST  1
+
+
+__global__ void static equal(int * a, int n, unsigned int constC){
     int offset = blockIdx.x*blockDim.x + threadIdx.x;
     int stride = blockDim.x * gridDim.x;
 
@@ -42,8 +38,7 @@ __global__ void static equal(type * a, int n, utype constC){
         a[i] = constC;
     }
 }
-
-__global__ void static genScanFilter_int_lth_bit(type * col,int n, utype constC,type * lt, type * eq){
+__global__ void static genScanFilter_int_lth_bit(int * col,int n, unsigned int constC,int * lt, int * eq){
     int offset = blockIdx.x*blockDim.x + threadIdx.x;
     int stride = blockDim.x * gridDim.x;  
 
@@ -65,65 +60,61 @@ cudaError_t checkCuda(cudaError_t result)
 #endif
   return result;
 }
-inline type bit_constC(type where,int j){
+inline int bit_constC(int where,int j){
 
-        type constC = ((((utype)1 << (type_len - 1  - j) )) & where)>>(type_len - 1 - j);
+        int constC = (((1U << (31 - j )) & where)>>(31 - j));
         if(constC != 0) 
-          constC = - 1;
+          constC = (1LL << 32) - 1;
         return constC;
 }
-inline type ran(){
-  type x = rand();
-  if(sizeof(type) == 8) return (x << 32) + rand();
-  return x;
-}
-void profilebitscan(type        *h_a, 
-                   type       *h_b, 
-                   type       *d, 
-                   type *lt,
-                   type *eq,
+
+void profilebitscan(int        *h_a, 
+                   int        *h_b, 
+                   int        *d, 
+                   int *lt,
+                   int *eq,
                    int  n,
-                   utype where,
+                   unsigned int where,
                    char         *desc,
                    unsigned int loopTotal)
 {
 
-  dim3 block(512);
-  dim3 grid(1024);
+  dim3 block(256);
+  dim3 grid(2048);
   float time,stime;
   // events for timing
   cudaEvent_t startEvent, stopEvent; 
   checkCuda( cudaEventCreate(&startEvent) );
   checkCuda( cudaEventCreate(&stopEvent) ); 
   stime=0;
-  int bytes=n * sizeof(type);
+  int bytes=n * sizeof(int);
   for(int loop = 1; loop <= loopTotal; loop++){  
       checkCuda( cudaEventRecord(startEvent, 0) );
       checkCuda( cudaMemcpy(d, h_a, bytes, cudaMemcpyHostToDevice) );
       checkCuda(cudaThreadSynchronize());
-      utype c = 0;
-      for(int i = 0;i < type_len;i++) c += ((utype)1 << i);
-      equal<<<grid,block>>>(lt, n/type_len, 0) ;
-      equal<<<grid,block>>>(eq, n/type_len, c) ;
+      unsigned int c = 0;
+      for(int i = 0;i < 32;i++) c += (1u << i);
+      equal<<<grid,block>>>(lt, n/32, 0) ;
+      equal<<<grid,block>>>(eq, n/32, c) ;
       checkCuda(cudaThreadSynchronize());
 
-      for(int j = 0; j < type_len; ++j){
-            int constC =bit_constC(where,j);            
-            genScanFilter_int_lth_bit<<<grid,block>>>(d + j * (n / type_len), n / type_len,  constC, lt, eq);
+      for(int j = 0; j < 32; ++j){
+            int constC =bit_constC(where,j);
+               // printf("%u %u\n",j,((((1U << (31 - j )) & where)>>(31-j))<< k));
+            
+            genScanFilter_int_lth_bit<<<grid,block>>>(d + j * (n / 32), n / 32,  constC, lt, eq);
             checkCuda(cudaThreadSynchronize());
       }
 
-      checkCuda( cudaMemcpy(h_b, lt, n / type_len * sizeof(type), cudaMemcpyDeviceToHost) );
-      checkCuda( cudaMemcpy(h_b + n / type_len , eq, n / type_len * sizeof(type), cudaMemcpyDeviceToHost) );
+      checkCuda( cudaMemcpy(h_b, lt, n / 32 * 4, cudaMemcpyDeviceToHost) );
+      checkCuda( cudaMemcpy(h_b + n / 32 , eq, n / 32 * 4, cudaMemcpyDeviceToHost) );
       checkCuda( cudaEventRecord(stopEvent, 0) );
       checkCuda( cudaEventSynchronize(stopEvent) );
 
       checkCuda( cudaEventElapsedTime(&time, startEvent, stopEvent) );
       stime += time;
-      ave_time += time;
       printf("time=%f\n",stime);
   }
-  cerr<<stime<<endl;
   printf("%f\n" ,bytes * 1e-6/(stime / loopTotal));
   checkCuda( cudaEventDestroy(startEvent) );
   checkCuda( cudaEventDestroy(stopEvent) );
@@ -137,57 +128,47 @@ int main(int argc, char ** argv)
       freopen("scan.in","r",stdin);
       freopen("scan_bit.out","w",stdout);
   #endif
-int inputN;
+  dim3 block(256);
+  dim3 grid(2048);
+  int inputN;
   sscanf(argv[1],"%d",&inputN);
   unsigned int nElements = inputN;
+  const unsigned int bytes = nElements * sizeof(int);
   #ifdef TEST
       scanf("%d",&nElements);
   #endif
-  const unsigned int bytes = nElements * sizeof(type);
-
   // host arrays
-  type *h_aPageable, *h_bPageable,*know_stop_constC_cpu;   
-  type *h_bitPageable;
-  type *know_stop_len_cpu;
-
+  int *h_aPageable, *h_bPageable,*h_bitPageable;   
+  int *h_aPinned, *h_bPinned;
 
   // device array
-  type *d_a;
-  type *lt,*eq;
+  int *d_a,*lt,*eq;
 
   // allocate and initialize
-  h_aPageable = (type*)malloc(bytes );          
-  h_bPageable = (type*)malloc(bytes );
-  h_bitPageable =(type *)malloc(bytes );
-  know_stop_len_cpu = (type *)malloc(bytes );     
-  know_stop_constC_cpu = (type *)malloc(bytes );           // host pageable
-  //checkCuda( cudaMallocHost((void**)&h_aPinned, bytes  ) ); // host pinned
-  //checkCuda( cudaMallocHost((void**)&h_bPinned, bytes  ) );  
+  h_aPageable = (int*)malloc(bytes );          
+  h_bPageable = (int*)malloc(bytes );
+  h_bitPageable =(int *)malloc(bytes );             // host pageable
+  checkCuda( cudaMallocHost((void**)&h_aPinned, bytes  ) ); // host pinned
+  checkCuda( cudaMallocHost((void**)&h_bPinned, bytes  ) );  
   checkCuda( cudaMalloc((void**)&d_a, bytes  ) );           // device
   checkCuda( cudaMalloc((void**)&lt, bytes ) ); // device return
   checkCuda( cudaMalloc((void**)&eq, bytes  ) );  
-
-  int early_size = 1024*1024; 
-  sscanf(argv[2],"%d",&early_size);  
-  srand(0);
-  for (int i = 0; i < nElements; ++i) h_aPageable[i] = ran()%((utype)1<<(type_len - 1));  
+  srand(time(0));
+  for (int i = 0; i < nElements; ++i) h_aPageable[i] = rand()%(1U<<31);     
   #ifdef TEST
-      for (int i = 0; i < nElements; ++i){ 
-      if(sizeof(type)==4) scanf("%d",h_aPageable + i);
-      else scanf("%lld",h_aPageable + i);
-     // cerr<<h_aPageable[i]<<endl;
-      }
+      for (int i = 0; i < nElements; ++i) scanf("%d",h_aPageable + i);
   #endif
-
   for (int i = 0; i < nElements; ++i) 
-    for(int j = type_len - 1; j >= 0; --j){
-        h_bitPageable[i / type_len + (type_len - 1 - j)*(nElements/type_len)] += (((h_aPageable[i] &(1<<j))>>j)<<(type_len - 1 - i % type_len));
+    for(int j = 31; j >= 0; --j){
+        h_bitPageable[i / 32 + (31-j)*(nElements/32)] += (((h_aPageable[i] &(1<<j))>>j)<<(31 - i % 32));
 
         //h_bitPageable[i / 32 + (31-j)*(nElements/32)] += 0;
     }
-
+  //for(int i = 0;i < nElements; i++) h_bitPageable[i] = rand()%(1<<31);
+  memcpy(h_aPinned, h_aPageable, bytes  );
 
   memset(h_bPageable, 0, bytes);
+  memset(h_bPinned, 0, bytes);
 
   // output device info and transfer size
   cudaDeviceProp prop;
@@ -205,44 +186,33 @@ int inputN;
   // }
 
 
+  int constC = rand()%(1U<<31);
+  #ifdef TEST
+      scanf("%d",&constC);
+  #endif
 
-  type constC = ran()%((utype)1<<(type_len - 1));
   // perform  scan eq
  // profilescan(h_aPageable, h_bPageable, d_a, filter, nElements, constC,"Pageable",20);
   //profilescan(h_aPinned, h_bPinned, d_a, filter,nElements, constC,"Pinned",20);
-  #ifdef TEST
-      int test_num = 0;
-      scanf("%d",&test_num);
-      for(int i  = 0; i < test_num; i++){
-        if(sizeof(type)==4)
-        scanf("%d",&constC);
-        else scanf("%lld",&constC);
-        profilebitscan(h_bitPageable, h_bPageable, d_a, lt, eq, nElements, constC,"Pageable",1);
-      }
-  #else 
-    constC = ran()%((utype)1<<(type_len - 1));
-      profilebitscan(h_bitPageable, h_bPageable, d_a, lt, eq, nElements, constC,"Pageable",1);
-  #endif
-
+  profilebitscan(h_bitPageable, h_bPageable, d_a, lt, eq, nElements, constC,"Pageable",1);
   // for(int i = 0; i < nElements; i++) printf("%3u ",h_aPageable[i]);printf("\n");
   // for(int i = 0; i < nElements; i++) printf("%3u ",((h_bPageable[i/32] & (1u << (31 - i % 32)))>> (31 - i % 32)));printf("\n");
   // for(int i = 0; i < nElements; i++) printf("%3u ",((h_bPageable[i/32 + nElements/32] & (1u << (31 - i % 32)))>> (31 - i % 32)));printf("\n");
   // for(int i = 0; i < nElements; i++) printf("%3u ",h_bitPageable[i]);printf("\n");
-  #ifdef TEST
+    #ifdef TEST
       for(int i = 0; i < nElements; i++) {
-          int x =(h_bPageable[i/type_len] & ((utype)1 << (type_len - 1 - i % type_len)))>> (type_len - 1 - i % type_len);
-          int y =(h_bPageable[i/type_len + nElements/type_len] & ((utype)1 << (type_len - 1 - i % type_len)))>> (type_len - 1 - i % type_len);
+          int x =(h_bPageable[i/32] & (1u << (31 - i % 32)))>> (31 - i % 32);
+          int y =(h_bPageable[i/32 + nElements/32] & (1u << (31 - i % 32)))>> (31 - i % 32);
           if(x ==0 && y == 0) printf("%d\n",1);
           else printf("%d\n", 0);
         //  printf("%d|%d\n",x,y);
       }
-          printf("%.6f\n",bytes* 1e-6 /(ave_time / test_num));
-      cerr<<bytes* 1e-6 /(ave_time / test_num)<<endl;
-
   #endif
   // cleanup
 
   cudaFree(lt);
   cudaFree(eq);
+  cudaFreeHost(h_aPinned);
+  cudaFreeHost(h_bPinned);
   free(h_aPageable); 
 }

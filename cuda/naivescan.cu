@@ -1021,28 +1021,7 @@ int main(int argc, char ** argv)
 
   checkCuda( cudaGetDeviceProperties(&prop, 0) );
 
-  // printf("\nDevice: %s\n", prop.name);
-  // if(bytes< 1024){
-  //     printf("scan size (B): %d\n", bytes);
-  // }else if (bytes < 1024 * 1024)
-  // {
-  //     printf("scan size (KB): %d\n", bytes / (1024));              
-  // }else{
-  //     printf("scan size (MB): %d\n", bytes / (1024 * 1024));
-  // }
 
-  
-  // srand(time(0));
-  // int constC = nElements/2;
-  // time_t a=clock();
-  // for (int i = 0; i < nElements; ++i) if(h_aPageable[i] < constC)
-  //       h_bPageable[i] = 1;
-  // else h_bPageable[i] = 0;
-  // time_t b=clock();
-  // double lentime=(double)(b-a)/CLOCKS_PER_SEC;
-  // printf("%f\n",lentime);
-  // printf("%f\n",bytes * 1e-9/lentime);
-  // return;
 
 
   // perform  scan eq
