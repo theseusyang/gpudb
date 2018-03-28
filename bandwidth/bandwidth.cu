@@ -88,6 +88,12 @@ int main(int argc, char ** argv)
   checkCuda( cudaMallocHost((void**)&h_bPinned, bytes) ); // host pinned
   checkCuda( cudaMalloc((void**)&d_a, bytes) );           // device
 
+  char busid[16];
+  int dev;
+  checkCuda(cudaGetDevice(&dev));
+  checkCuda(cudaDeviceGetPCIBusId(busid, 16, dev));
+  printf("%s\n", busid);
+
   for (int i = 0; i < nElements; ++i) h_aPageable[i] = i;      
   memcpy(h_aPinned, h_aPageable, bytes);
   memset(h_bPageable, 0, bytes);
