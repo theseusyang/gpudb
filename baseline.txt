@@ -1,0 +1,4 @@
+1.gpudb scan
+2.scan+bilot/bitweaving
+3.bitweaving+earlystop
+4.bitweaving+knowstop
