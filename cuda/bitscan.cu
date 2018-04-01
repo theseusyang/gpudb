@@ -88,7 +88,7 @@ void profilebitscan(type        *h_a,
                    unsigned int loopTotal)
 {
 
-  dim3 block(512);
+  dim3 block(256);
   dim3 grid(1024);
   float time,stime;
   // events for timing
@@ -96,7 +96,7 @@ void profilebitscan(type        *h_a,
   checkCuda( cudaEventCreate(&startEvent) );
   checkCuda( cudaEventCreate(&stopEvent) ); 
   stime=0;
-  int bytes=n * sizeof(type);
+  utype bytes=n * sizeof(type);
   for(int loop = 1; loop <= loopTotal; loop++){  
       checkCuda( cudaEventRecord(startEvent, 0) );
       checkCuda( cudaMemcpy(d, h_a, bytes, cudaMemcpyHostToDevice) );
@@ -119,12 +119,12 @@ void profilebitscan(type        *h_a,
       checkCuda( cudaEventSynchronize(stopEvent) );
 
       checkCuda( cudaEventElapsedTime(&time, startEvent, stopEvent) );
-      stime += time;
+
       ave_time += time;
-      printf("time=%f\n",stime);
+      //printf("time=%f\n",stime);
   }
-  cerr<<stime<<endl;
-  printf("%f\n" ,bytes * 1e-6/(stime / loopTotal));
+  //cerr<<stime<<endl;
+  //printf("%f\n" ,bytes * 1e-6/(stime / loopTotal));
   checkCuda( cudaEventDestroy(startEvent) );
   checkCuda( cudaEventDestroy(stopEvent) );
 }
@@ -137,13 +137,13 @@ int main(int argc, char ** argv)
       freopen("scan.in","r",stdin);
       freopen("scan_bit.out","w",stdout);
   #endif
-int inputN;
+  int inputN;
   sscanf(argv[1],"%d",&inputN);
-  unsigned int nElements = inputN;
+  utype nElements = inputN;
   #ifdef TEST
       scanf("%d",&nElements);
   #endif
-  const unsigned int bytes = nElements * sizeof(type);
+  utype bytes = nElements * sizeof(type);
 
   // host arrays
   type *h_aPageable, *h_bPageable,*know_stop_constC_cpu;   
@@ -181,13 +181,11 @@ int inputN;
 
   for (int i = 0; i < nElements; ++i) 
     for(int j = type_len - 1; j >= 0; --j){
-        h_bitPageable[i / type_len + (type_len - 1 - j)*(nElements/type_len)] += (((h_aPageable[i] &(1<<j))>>j)<<(type_len - 1 - i % type_len));
-
+        h_bitPageable[i / type_len + (type_len - 1 - j)*(nElements/type_len)] += (((h_aPageable[i] &((utype)1<<j))>>j)<<(type_len - 1 - i % type_len));
         //h_bitPageable[i / 32 + (31-j)*(nElements/32)] += 0;
     }
 
 
-  memset(h_bPageable, 0, bytes);
 
   // output device info and transfer size
   cudaDeviceProp prop;
@@ -234,7 +232,7 @@ int inputN;
           int y =(h_bPageable[i/type_len + nElements/type_len] & ((utype)1 << (type_len - 1 - i % type_len)))>> (type_len - 1 - i % type_len);
           if(x ==0 && y == 0) printf("%d\n",1);
           else printf("%d\n", 0);
-        //  printf("%d|%d\n",x,y);
+
       }
           printf("%.6f\n",bytes* 1e-6 /(ave_time / test_num));
       cerr<<bytes* 1e-6 /(ave_time / test_num)<<endl;
